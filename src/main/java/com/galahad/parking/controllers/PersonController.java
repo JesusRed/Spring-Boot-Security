@@ -73,7 +73,8 @@ public class PersonController {
                         .withSubject(person.getPersonName())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles", person.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList()))
+                        //.withClaim("roles", person.getRole().stream().map(Role::getRoleName).collect(Collectors.toList()))
+                        .withSubject(person.getRole().getRoleName())
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);

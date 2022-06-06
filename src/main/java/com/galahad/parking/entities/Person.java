@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 
 @AllArgsConstructor
 @Entity
@@ -28,7 +27,7 @@ public class Person {
     @Column(name = "email", nullable = false)
     private String email;
     @ToString.Include
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Role role;
 
 }

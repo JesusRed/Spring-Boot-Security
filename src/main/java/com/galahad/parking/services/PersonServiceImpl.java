@@ -39,9 +39,8 @@ public class PersonServiceImpl implements PersonService, UserDetailsService {
             log.info("Person {} found", personname);
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        person.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-        });
+        //person.getRole().forEach(role -> {
+        authorities.add(new SimpleGrantedAuthority(person.getRole().getRoleName()));
         return new org.springframework.security.core.userdetails.User(person.getPersonName(), person.getPassword(), authorities);
     }
 
@@ -63,7 +62,7 @@ public class PersonServiceImpl implements PersonService, UserDetailsService {
         log.info("Adding role {} to person {}", roleName, personName);
         Person person = personRepo.findByPersonName(personName);
         Role role = roleRepo.findByRoleName(roleName);
-        person.getRoles().add(role);
+        person.setRole(role);
     }
 
     @Override
