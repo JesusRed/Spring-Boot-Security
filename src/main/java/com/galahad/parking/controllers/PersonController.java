@@ -6,24 +6,21 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galahad.parking.entities.Person;
-import com.galahad.parking.entities.Role;
-import com.galahad.parking.services.PersonService;
+import com.galahad.parking.services.interfaces.PersonService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
@@ -33,29 +30,14 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class PersonController {
     private final PersonService personService;
 
-    @GetMapping("/persons")
-    public ResponseEntity<List<Person>> getPersons() {
-        return ResponseEntity.ok().body(personService.getPersons());
-    }
+//    @GetMapping("/persons")
+//    public ResponseEntity<List<Person>> getPersons() {
+//        return ResponseEntity.ok().body(personService.getPersons());
+//    }
 
     @PostMapping("/person/save")
-    public ResponseEntity<Person> savePerson(@RequestBody Person person) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/person/save").toUriString());
-        return ResponseEntity.created(uri).body(personService.savePerson(person));
-    }
-
-    @PostMapping("/role/save")
-    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(personService.saveRole(role));
-    }
-
-    @PostMapping("/role/addtoperson")
-    public ResponseEntity<?> addRoleToPerson(@RequestBody RoleToPersonForm form) {
-        personService.addRoleToPerson(form.getPersonName(), form.getRoleName());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Person> savePerson(@Valid @RequestBody Person person) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(personService.savePerson(person));
     }
 
     @GetMapping("/token/refresh")
@@ -68,13 +50,13 @@ public class PersonController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String personname = decodedJWT.getSubject();
-                Person person = personService.getPerson(personname);
+                Optional<Person> person = personService.getPerson(personname);
                 String access_token = JWT.create()
-                        .withSubject(person.getPersonName())
+                        .withSubject(person.get().getPersonName())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         //.withClaim("roles", person.getRole().stream().map(Role::getRoleName).collect(Collectors.toList()))
-                        .withSubject(person.getRole().getRoleName())
+                        .withSubject(person.get().getRole())
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);

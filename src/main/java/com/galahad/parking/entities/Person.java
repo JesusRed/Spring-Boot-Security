@@ -1,9 +1,12 @@
 package com.galahad.parking.entities;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import javax.validation.constraints.NotBlank;
+
 
 @AllArgsConstructor
 @Entity
@@ -11,23 +14,23 @@ import java.util.ArrayList;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
+@Accessors(chain = true)
+@Table(name = "persons")
 public class Person {
     @ToString.Include
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long id;
-    @ToString.Include
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String personName;
-    @ToString.Include
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
-    @ToString.Include
-    @Column(name = "email", nullable = false)
-    private String email;
-    @ToString.Include
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Role role;
+    private String role;
 
+//    public Person(String personName, String password, String role) {
+//        this.personName = personName;
+//        this.password = password;
+//        this.role = role;
+//    }
 }

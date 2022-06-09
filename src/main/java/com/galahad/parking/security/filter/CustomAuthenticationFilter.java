@@ -1,4 +1,4 @@
-package com.galahad.parking.filter;
+package com.galahad.parking.security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

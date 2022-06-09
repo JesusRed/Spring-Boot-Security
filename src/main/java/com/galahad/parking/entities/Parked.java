@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-@RequiredArgsConstructor
 @Accessors(chain = true)
+@Table(name = "parked")
 public class Parked {
     @ToString.Include
     @Id
@@ -25,15 +26,9 @@ public class Parked {
     @Column(nullable = false)
     @Size(min = 6, max = 6, message = "Invalid car plate")
     private String carPlate;
-    @Column(name = "entryDate", nullable = false)
+
     private LocalDateTime entryDate;
+    private String emailCar;
+    private String message;
 
-    public Parked(String carPlate) {
-        this.carPlate = carPlate;
-    }
-
-    public Parked(String carPlate, LocalDateTime entryDate) {
-        this.carPlate = carPlate;
-        this.entryDate = entryDate;
-    }
 }
