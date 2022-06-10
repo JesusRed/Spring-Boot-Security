@@ -19,7 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -30,10 +33,6 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class PersonController {
     private final PersonService personService;
 
-//    @GetMapping("/persons")
-//    public ResponseEntity<List<Person>> getPersons() {
-//        return ResponseEntity.ok().body(personService.getPersons());
-//    }
 
     @PostMapping("/person/save")
     public ResponseEntity<Person> savePerson(@Valid @RequestBody Person person) {
@@ -64,7 +63,7 @@ public class PersonController {
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception exception) {
-                response.setHeader("error", exception.getMessage());
+                response.setHeader("Error", exception.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 //response.sendError(FORBIDDEN.value());
                 Map<String, String> error = new HashMap<>();

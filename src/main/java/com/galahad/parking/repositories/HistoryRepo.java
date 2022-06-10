@@ -2,11 +2,11 @@ package com.galahad.parking.repositories;
 
 import com.galahad.parking.entities.History;
 import com.galahad.parking.entities.Parked;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,9 @@ public interface HistoryRepo extends JpaRepository<History, Long> {
                     + " WHERE h.entry_date BETWEEN ?1 AND ?2 ",
             nativeQuery = true
     )
-    List<History> findByBeginDateAndEndDate(LocalDateTime beginDate, LocalDateTime endDate);
+    List<Map<String, Object>> findByBeginDateAndEndDate(Date beginDate, Date endDate);
+
+    List<History> findByEntryDateBetween(LocalDateTime start, LocalDateTime end);
 
     @Query(
             value = "SELECT * " +

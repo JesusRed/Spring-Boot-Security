@@ -9,7 +9,7 @@ import com.galahad.parking.services.ParkingServiceImpl;
 import com.galahad.parking.services.interfaces.ParkingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
@@ -57,9 +57,8 @@ public class ParkingController {
     //TAREA: REGISTRAR ENTRADA DE VEHICULOS
     //ROL: USER
     @PostMapping("/parking/entry")
-    public ResponseEntity<String> addCarToParking(@Valid @RequestBody Parked parked) {
-        parkingService.addCarToParking(parked);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ID:" + parked.getId());
+    public Parked addCarToParking(@Valid @RequestBody Parked parked) {
+        return parkingService.addCarToParking(parked);
     }
 
     //TAREA: REGISTRAR SALIDA DE VEHICULOS
@@ -71,8 +70,6 @@ public class ParkingController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Salida registrada");
     }
 
-
-
     //TAREA: CONTAR EL VEHICULO MAS REPETIDO
     //ROL: DESCONOCIDO
     @GetMapping("/parking/common")
@@ -83,7 +80,7 @@ public class ParkingController {
     //TAREA: BUSACR ENTRADA EN EL HISTORIAL
     //ROL: DESCONOCIDO
     @GetMapping("parking/history/{beginDate}/{endDate}")
-    public List<History> getCarPlateByDate(@Valid @PathVariable LocalDateTime beginDate, @PathVariable LocalDateTime endDate) {
+    public List<Map<String, Object>>  getCarPlateByDate(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date beginDate, @PathVariable(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endDate) {
         return parkingService1.getCarPlateByDate(beginDate, endDate);
     }
 
@@ -97,8 +94,9 @@ public class ParkingController {
 
     //TAREA: ENVIO DE CORREO AL PARQUEADO
     //ROL: ADMIN
-    @PostMapping(path="/parking/email", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String sendMailParking(@Valid @RequestBody SendEmailDto sendEmailDto) {
-        return parkingService.sendEmail(sendEmailDto);
+    @PostMapping(path = "/parking/email", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> sendMailParking(@Valid @RequestBody SendEmailDto sendEmailDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(parkingService.sendEmail(sendEmailDto));
+       //return parkingService.sendEmail(sendEmailDto);
     }
 }

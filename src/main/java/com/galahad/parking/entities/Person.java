@@ -2,10 +2,8 @@ package com.galahad.parking.entities;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 
 @AllArgsConstructor

@@ -9,12 +9,14 @@ import com.galahad.parking.services.interfaces.ParkingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,14 +78,13 @@ public class ParkingServiceImpl implements ParkingService {
         return historyRepo.findByCarPlate(carPlate);
     }
 
-
     //CONSULTAS EN SQL
     //ROL: TODOS
     public List<Map<String, Object>> findCommonCar() {
         return historyRepo.countAllByCarPlate();
     }
 
-    public List<History> getCarPlateByDate(LocalDateTime beginDate, LocalDateTime endDate) {
+    public  List<Map<String, Object>>  getCarPlateByDate(Date beginDate, Date endDate) {
         return historyRepo.findByBeginDateAndEndDate(beginDate, endDate);
     }
 
@@ -97,7 +98,6 @@ public class ParkingServiceImpl implements ParkingService {
         if (parkedOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede enviar el correo, no existe la placa");
         }
-        return restTemplate.postForObject("http://localhost:8081/mail/send", sendEmailDto, String.class);
+        return restTemplate.postForObject("http://localhost:8081/mail/send", sendEmailDto.toParked(), String.class);
     }
-
 }

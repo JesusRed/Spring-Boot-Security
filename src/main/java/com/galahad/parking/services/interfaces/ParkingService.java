@@ -3,6 +3,7 @@ package com.galahad.parking.services.interfaces;
 import com.galahad.parking.entities.History;
 import com.galahad.parking.entities.Parked;
 import com.galahad.parking.entities.dto.SendEmailDto;
+
 import java.util.List;
 
 public interface ParkingService {

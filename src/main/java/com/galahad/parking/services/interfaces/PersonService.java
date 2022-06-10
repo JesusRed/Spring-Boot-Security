@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface PersonService {
     Person savePerson(Person person);
+
     Optional<Person> getPerson(String personName);
     // Role saveRole(Role role);
     // void addRoleToPerson(String personName, String roleName);

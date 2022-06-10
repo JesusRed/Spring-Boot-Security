@@ -10,7 +10,7 @@ public class ExitParkingDto {
     @NotBlank(message = "The car plate provided is invalid")
     private String carPlate;
 
-    public Parked toParked(){
+    public Parked toParked() {
         return new Parked()
                 .setCarPlate(carPlate);
     }
